@@ -12,11 +12,6 @@ const PORT = process.env.PORT;
 const app = express();
 app.use(cors());
 
-let errorObject = {
-  status : 500,
-  responseText : "Sorry, something went wrong",
-}
-
 // Location
 app.get('/location', (request, response) => {
 
@@ -30,14 +25,6 @@ app.get('/location', (request, response) => {
     handleError(error, response);
   }
 });
-
-// Location Constructor Function
-function Location(query, geoData){
-  this.search_query = query;
-  this.formatted_query = geoData.formatted_address;
-  this.latitude = geoData.geometry.location.lat;
-  this.longitude = geoData.geometry.location.lng;
-}
 
 // Weather
 app.get('/weather', (request, response) => {
@@ -59,6 +46,14 @@ app.get('/weather', (request, response) => {
     handleError(error, response)
   }
 });
+
+// Location Constructor Function
+function Location(query, geoData){
+  this.search_query = query;
+  this.formatted_query = geoData.formatted_address;
+  this.latitude = geoData.geometry.location.lat;
+  this.longitude = geoData.geometry.location.lng;
+}
 
 // Weather Constructor Function
 function Weather(query, darkSkyData){
