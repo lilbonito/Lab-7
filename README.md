@@ -18,9 +18,9 @@ Estimate of time needed to complete: 15 minutes
 
 Start time: 10:20am
 
-Finish time: 10:35am
+Finish time: 10:40am
 
-Actual time needed to complete: 15 minutes
+Actual time needed to complete: 20 minutes
 -----
 Lab 07 Feature 2 - API
 
@@ -28,19 +28,19 @@ Estimate of time needed to complete: 1 hour
 
 Start time: 10:40am
 
-Finish time: 11:10
+Finish time: 1:20pm
 
-Actual time needed to complete: 30 minutes
+Actual time needed to complete: 1.5 hour
 -----
 Lab 07 Feature 3 - EventBrite
 
-Estimate of time needed to complete: 
+Estimate of time needed to complete: 1 hour
 
-Start time: 
+Start time: 1:20pm
 
-Finish time: 
+Finish time: 1:45pm 
 
-Actual time needed to complete: 
+Actual time needed to complete: Did not complete
 -----
 
 
