@@ -12,22 +12,6 @@ const PORT = process.env.PORT;
 const app = express();
 app.use(cors());
 
-// API Routes
-// app.get('/ping', (request, response) => {
-//   try {
-//     response.send('pong');
-//   }
-//   catch(error) {
-//     console.error(error);
-//     response.status(500).send('Status: 500');
-//   }
-// });
-
-let errorObject = {
-  status : 500,
-  responseText : "Sorry, something went wrong",
-}
-
 // Location
 app.get('/location', (request, response) => {
 
@@ -38,8 +22,28 @@ app.get('/location', (request, response) => {
     response.send(location);
   }
   catch(error) {
-    console.error(error);
-    response.status(500).send(errorObject);
+    handleError(error, response);
+  }
+});
+
+// Weather
+app.get('/weather', (request, response) => {
+
+  try {
+    let weatherArray = [];
+
+    //Mock Data
+    const mockWeatherData = require('./data/darksky.json');
+    //Itterating through mock data
+    for (var i = 0; i < mockWeatherData.daily.data.length; i++){
+      
+      const testWeather = new Weather(request.query.data, mockWeatherData.daily.data[i]);
+      weatherArray.push(testWeather);
+    }
+    response.send(weatherArray);
+  }
+  catch(error) {
+    handleError(error, response)
   }
 });
 
@@ -51,36 +55,16 @@ function Location(query, geoData){
   this.longitude = geoData.geometry.location.lng;
 }
 
-// Weather
-app.get('/weather', (request, response) => {
-
-  try {
-    let weatherArray = [];
-
-    //Mock Data
-    const mockWeatherData = require('./data/darksky.json');
-  
-    for (var i = 0; i < mockWeatherData.daily.data.length; i++){
-      // ORIGINAL FUNCTION BEFORE CONSTRUCTOR
-      // let testWeather = { 
-      //   forecast : mockWeatherData.daily.data[i].summary,
-      //   time : mockWeatherData.daily.data[i].time,
-      // }
-      const testWeather = new Weather(request.query.data, mockWeatherData.daily.data[i]);
-      weatherArray.push(testWeather);
-    }
-    response.send(weatherArray);
-  }
-  catch(error) {
-    console.error(error);
-    response.status(500).send(errorObject);
-  }
-});
-
 // Weather Constructor Function
 function Weather(query, darkSkyData){
   this.forecast = darkSkyData.summary;
   this.time = new Date(darkSkyData.time * 1000).toDateString();
+}
+
+// Error handling
+function handleError(error, response) {
+  console.error(error);
+  response.status(500).send('Sorry, something went wrong')
 }
 
 // Make sure the server is listening for requests
