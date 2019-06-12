@@ -34,12 +34,11 @@ app.get('/weather', (request, response) => {
 
     //Mock Data
     const mockWeatherData = require('./data/darksky.json');
-    //Itterating through mock data
-    for (var i = 0; i < mockWeatherData.daily.data.length; i++){
-      
-      const testWeather = new Weather(request.query.data, mockWeatherData.daily.data[i]);
+    //Iterating through mock data
+    mockWeatherData.daily.data.map(element => {
+      let testWeather = new Weather(request.query.data, element);
       weatherArray.push(testWeather);
-    }
+    });
     response.send(weatherArray);
   }
   catch(error) {
