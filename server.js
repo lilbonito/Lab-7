@@ -34,7 +34,7 @@ app.get('/weather', (request, response) => {
 
     //Mock Data
     const mockWeatherData = require('./data/darksky.json');
-  
+    //Itterating through mock data
     for (var i = 0; i < mockWeatherData.daily.data.length; i++){
       
       const testWeather = new Weather(request.query.data, mockWeatherData.daily.data[i]);
@@ -61,6 +61,7 @@ function Weather(query, darkSkyData){
   this.time = new Date(darkSkyData.time * 1000).toDateString();
 }
 
+// Error handling
 function handleError(error, response) {
   console.error(error);
   response.status(500).send('Sorry, something went wrong')
