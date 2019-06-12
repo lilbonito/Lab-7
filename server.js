@@ -19,6 +19,7 @@ app.use(cors());
 // Can have routes cleanly and not in line
 app.get('/location', handleLocationRequest);
 app.get('/weather', handleWeatherRequest);
+app.get('/events', handleEventRequest);
 
 function handleLocationRequest(request, response){
   const URL = `https://maps.googleapis.com/maps/api/geocode/json?address=${request.query.data}&key=${process.env.GEOCODE_API_KEY}`;
@@ -43,8 +44,28 @@ function handleWeatherRequest(request, response){
         return (new Weather(request.query.data, element));
         
       })
-      console.log(weather);
+      // console.log(weather);
       response.send(weather);
+    })
+    .catch(error => {
+      handleError(error);
+    })
+}
+
+function handleEventRequest(request, response){
+  // const authURL = `https://www.eventbriteapi.com/v3/users/me/?token=${process.env.EVENTBRITE_API_KEY}`;
+  const URL = `curl -X GET  https://www.eventbriteapi.com/v3/events/search?location.longitude=${location.longitude}&location.latitude=${location.latitude}&expand=venue   -H 'Authorization: Bearer ${process.env.EVENTBRITE_API_KEY}'`;
+
+  // console.log(URL);
+  return superagent.get(URL)
+    .then(res => {
+      console.log(res.body);
+      // let event = res.body.daily.data.map(element => { //TODO: change path
+      //   return (new Event(request.query.data, element));
+      
+      // })
+      // console.log(event);
+      response.send(event);
     })
     .catch(error => {
       handleError(error);
