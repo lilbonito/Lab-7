@@ -1,0 +1,13 @@
+/ function handleWeatherRequest(request, response){
+//   const URL = `https://api.darksky.net/forecast/${process.env.WEATHER_API_KEY}/${location.latitude},${location.longitude}`;
+
+//   return superagent.get(URL)
+//     .then(res => {
+//       console.log('response from darksky api', res.body.results[0]);
+//       const weather = new Weather(request.query.data, res.body);
+//       response.send(weather)
+//     })
+//     .catch(error => {
+//       handleError(error);
+//     })
+// }

@@ -1,5 +1,8 @@
 'use strict';
 
+//Variables
+let location;
+
 // Load Environment Variable from the .env file
 require('dotenv').config();
 
@@ -15,14 +18,15 @@ app.use(cors());
 
 // Can have routes cleanly and not in line
 app.get('/location', handleLocationRequest);
+app.get('/weather', handleWeatherRequest);
 
 function handleLocationRequest(request, response){
   const URL = `https://maps.googleapis.com/maps/api/geocode/json?address=${request.query.data}&key=${process.env.GEOCODE_API_KEY}`;
 
   return superagent.get(URL)
     .then(res => {
-      console.log('response from geocode api', res.body.results[0]);
-      const location = new Location(request.query.data, res.body);
+      // console.log('response from geocode api', res.body.results[0]);
+      location = new Location(request.query.data, res.body);
       response.send(location)
     })
     .catch(error => {
@@ -30,25 +34,22 @@ function handleLocationRequest(request, response){
     })
 }
 
-// Weather
-app.get('/weather', (request, response) => {
+function handleWeatherRequest(request, response){
+  const URL = `https://api.darksky.net/forecast/${process.env.WEATHER_API_KEY}/${location.latitude},${location.longitude}`;
 
-  try {
-    let weatherArray = [];
-
-    //Mock Data
-    const mockWeatherData = require('./data/darksky.json');
-    //Iterating through mock data
-    mockWeatherData.daily.data.map(element => {
-      let testWeather = new Weather(request.query.data, element);
-      weatherArray.push(testWeather);
-    });
-    response.send(weatherArray);
-  }
-  catch(error) {
-    handleError(error, response)
-  }
-});
+  return superagent.get(URL)
+    .then(res => {
+      let weather = res.body.daily.data.map(element => {
+        return (new Weather(request.query.data, element));
+        
+      })
+      console.log(weather);
+      response.send(weather);
+    })
+    .catch(error => {
+      handleError(error);
+    })
+}
 
 // Location Constructor Function
 function Location(query, rawData){
