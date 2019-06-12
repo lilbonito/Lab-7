@@ -12,17 +12,6 @@ const PORT = process.env.PORT;
 const app = express();
 app.use(cors());
 
-// API Routes
-// app.get('/ping', (request, response) => {
-//   try {
-//     response.send('pong');
-//   }
-//   catch(error) {
-//     console.error(error);
-//     response.status(500).send('Status: 500');
-//   }
-// });
-
 let errorObject = {
   status : 500,
   responseText : "Sorry, something went wrong",
@@ -38,8 +27,7 @@ app.get('/location', (request, response) => {
     response.send(location);
   }
   catch(error) {
-    console.error(error);
-    response.status(500).send(errorObject);
+    handleError(error, response);
   }
 });
 
@@ -61,19 +49,14 @@ app.get('/weather', (request, response) => {
     const mockWeatherData = require('./data/darksky.json');
   
     for (var i = 0; i < mockWeatherData.daily.data.length; i++){
-      // ORIGINAL FUNCTION BEFORE CONSTRUCTOR
-      // let testWeather = { 
-      //   forecast : mockWeatherData.daily.data[i].summary,
-      //   time : mockWeatherData.daily.data[i].time,
-      // }
+      
       const testWeather = new Weather(request.query.data, mockWeatherData.daily.data[i]);
       weatherArray.push(testWeather);
     }
     response.send(weatherArray);
   }
   catch(error) {
-    console.error(error);
-    response.status(500).send(errorObject);
+    handleError(error, response)
   }
 });
 
@@ -81,6 +64,11 @@ app.get('/weather', (request, response) => {
 function Weather(query, darkSkyData){
   this.forecast = darkSkyData.summary;
   this.time = new Date(darkSkyData.time * 1000).toDateString();
+}
+
+function handleError(error, response) {
+  console.error(error);
+  response.status(500).send('Sorry, something went wrong')
 }
 
 // Make sure the server is listening for requests
