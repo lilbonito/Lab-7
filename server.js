@@ -6,25 +6,29 @@ require('dotenv').config();
 // Application Dependencies
 const express = require('express');
 const cors = require('cors');
+const superagent = require('superagent');
 
 // Application Setup
 const PORT = process.env.PORT;
 const app = express();
 app.use(cors());
 
-// Location
-app.get('/location', (request, response) => {
+// Can have routes cleanly and not in line
+app.get('/location', handleLocationRequest);
 
-  try {
-    // Mock DATA
-    const mockLocationData = require('./data/geo.json');
-    const location = new Location(request.query.data, mockLocationData.results[0]);
-    response.send(location);
-  }
-  catch(error) {
-    handleError(error, response);
-  }
-});
+function handleLocationRequest(request, response){
+  const URL = `https://maps.googleapis.com/maps/api/geocode/json?address=${request.query.data}&key=${process.env.GEOCODE_API_KEY}`;
+
+  return superagent.get(URL)
+    .then(res => {
+      console.log('response from geocode api', res.body.results[0]);
+      const location = new Location(request.query.data, res.body);
+      response.send(location)
+    })
+    .catch(error => {
+      handleError(error);
+    })
+}
 
 // Weather
 app.get('/weather', (request, response) => {
@@ -47,11 +51,11 @@ app.get('/weather', (request, response) => {
 });
 
 // Location Constructor Function
-function Location(query, geoData){
+function Location(query, rawData){
   this.search_query = query;
-  this.formatted_query = geoData.formatted_address;
-  this.latitude = geoData.geometry.location.lat;
-  this.longitude = geoData.geometry.location.lng;
+  this.formatted_query = rawData.results[0].formatted_address;
+  this.latitude = rawData.results[0].geometry.location.lat;
+  this.longitude = rawData.results[0].geometry.location.lng;
 }
 
 // Weather Constructor Function
