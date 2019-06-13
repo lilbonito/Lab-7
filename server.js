@@ -49,11 +49,17 @@ function handleWeatherRequest(request, response){
     })
 }
 
-function handleEventRequest(query){
+function handleEventRequest(query, response){
   let URL = `https://www.eventbriteapi.com/v3/events/search?location.address=${query}&location.within=1km`;
   return superagent.get(URL)
     .set('Authorization', `Bearer ${process.env.EVENTBRITE_API_KEY}`)
-    .then(data => console.log('data', data.body))//.event.map(event => new Event(event)))
+    .then(data => {
+      let eBrite = data.body.events.map(event => {
+        return (new Event(event));
+      })
+      console.log(eBrite);
+      response.send(eBrite);
+    })
     .catch(error => handleError(error));
 }
 
@@ -69,6 +75,14 @@ function Location(query, rawData){
 function Weather(query, darkSkyData){
   this.forecast = darkSkyData.summary;
   this.time = new Date(darkSkyData.time * 1000).toDateString();
+}
+
+// Event Constructor Function
+function Event(event){
+  this.link = event.url,
+  this.name = event.name.text,
+  this.event_date = event.start.local,
+  this.summary = event.summary;
 }
 
 // Error handling

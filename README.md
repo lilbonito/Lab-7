@@ -40,7 +40,7 @@ Start time: 1:20pm
 
 Finish time: 1:45pm 
 
-Actual time needed to complete: Did not complete
+Actual time needed to complete: 12:30pm +1 day
 -----
 
 
