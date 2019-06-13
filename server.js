@@ -20,13 +20,12 @@ app.use(cors());
 app.get('/location', handleLocationRequest);
 app.get('/weather', handleWeatherRequest);
 app.get('/events', handleEventRequest);
+///
 
 function handleLocationRequest(request, response){
   const URL = `https://maps.googleapis.com/maps/api/geocode/json?address=${request.query.data}&key=${process.env.GEOCODE_API_KEY}`;
-
   return superagent.get(URL)
     .then(res => {
-      // console.log('response from geocode api', res.body.results[0]);
       location = new Location(request.query.data, res.body);
       response.send(location)
     })
@@ -42,9 +41,7 @@ function handleWeatherRequest(request, response){
     .then(res => {
       let weather = res.body.daily.data.map(element => {
         return (new Weather(request.query.data, element));
-        
       })
-      // console.log(weather);
       response.send(weather);
     })
     .catch(error => {
@@ -52,24 +49,12 @@ function handleWeatherRequest(request, response){
     })
 }
 
-function handleEventRequest(request, response){
-  // const authURL = `https://www.eventbriteapi.com/v3/users/me/?token=${process.env.EVENTBRITE_API_KEY}`;
-  const URL = `curl -X GET  https://www.eventbriteapi.com/v3/events/search?location.longitude=${location.longitude}&location.latitude=${location.latitude}&expand=venue   -H 'Authorization: Bearer ${process.env.EVENTBRITE_API_KEY}'`;
-
-  // console.log(URL);
+function handleEventRequest(query){
+  let URL = `https://www.eventbriteapi.com/v3/events/search?location.address=${query}&location.within=1km`;
   return superagent.get(URL)
-    .then(res => {
-      console.log(res.body);
-      // let event = res.body.daily.data.map(element => { //TODO: change path
-      //   return (new Event(request.query.data, element));
-      
-      // })
-      // console.log(event);
-      response.send(event);
-    })
-    .catch(error => {
-      handleError(error);
-    })
+    .set('Authorization', `Bearer ${process.env.EVENTBRITE_API_KEY}`)
+    .then(data => console.log('data', data.body))//.event.map(event => new Event(event)))
+    .catch(error => handleError(error));
 }
 
 // Location Constructor Function
@@ -94,3 +79,4 @@ function handleError(error, response) {
 
 // Make sure the server is listening for requests
 app.listen(PORT, () => console.log(`App is listening on ${PORT}`));
+
