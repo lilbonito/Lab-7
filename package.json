@@ -1,21 +1,30 @@
 {
-  "name": "demos",
+  "name": "Lab-7",
   "version": "1.0.0",
-  "description": "",
+  "description": "Lab 07 Feature 00 - Improvements",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
     "watch": "nodemon server.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EvanBC1/Lab-7.git"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EvanBC1/Lab-7/issues"
+  },
+  "homepage": "https://github.com/EvanBC1/Lab-7#readme",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^8.0.0",
     "express": "^4.17.1",
     "nodemon": "^1.19.1",
-    "superagent": "^5.0.6"
+    "pg": "^7.11.0",
+    "superagent": "^5.0.8"
   }
 }
