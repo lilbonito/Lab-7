@@ -24,7 +24,7 @@ app.use(cors());
 
 // Can have routes cleanly and not in line
 app.get('/location', handleLocation);
-app.get("/weather", handleWeatherRequest);
+// app.get("/weather", handleWeather);
 app.get("/events", handleEventRequest);
 ///
 
@@ -33,9 +33,9 @@ function handleLocation(req, res) {
   getLatLong(req.query.data)
     .then(location => res.send(location))
     .catch(error => handleError(error, res));
-}
+ }
 // function handleWeather(req, res) {
-//   getLatLong(req.query.data)
+//   getWeather(req.query.data)
 //     .then(location => res.send(location))
 //     .catch(error => handleError(error, res));
 // }
@@ -51,7 +51,7 @@ function getLatLong(query) {
     .query(sql)
     .then(results => {
       if (results.rowCount > 0) {
-        console.log('************************* from cache');
+        console.log('************************* from cache', results);
         return results.rows;
       } else {
         const URL = `https://maps.googleapis.com/maps/api/geocode/json?address=${query}&key=${
@@ -85,23 +85,29 @@ function getLatLong(query) {
 
 
 
-function handleWeatherRequest(request, response) {
-  const URL = `https://api.darksky.net/forecast/${
-    process.env.WEATHER_API_KEY
-  }/${location.latitude},${location.longitude}`;
+// function getWeather(rquery) {
+//   const sql =`SELECT * FROM weather WHERE search_query = '${query}'`;
+//   return client
+//   .query(sql)
+//   .then(results => {
+//     if
+//   })
+//   const URL = `https://api.darksky.net/forecast/${
+//     process.env.WEATHER_API_KEY
+//   }/${location.latitude},${location.longitude}`;
 
-  return superagent
-    .get(URL)
-    .then(res => {
-      let weather = res.body.daily.data.map(element => {
-        return new Weather(request.query.data, element);
-      });
-      response.send(weather);
-    })
-    .catch(error => {
-      handleError(error);
-    });
-}
+//   return superagent
+//     .get(URL)
+//     .then(res => {
+//       let weather = res.body.daily.data.map(element => {
+//         return new Weather(request.query.data, element);
+//       });
+//       response.send(weather);
+//     })
+//     .catch(error => {
+//       handleError(error);
+//     });
+// }
 
 function handleEventRequest(query, response) {
   let URL = `https://www.eventbriteapi.com/v3/events/search?location.address=${query}&location.within=1km`;
