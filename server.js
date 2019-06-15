@@ -57,7 +57,8 @@ function handleEventRequest(query, response){
       let eBrite = data.body.events.map(event => {
         return (new Event(event));
       })
-      console.log(eBrite);
+      let today = new Date();
+      console.log(`This log was at ${today.getHours()} : ${today.getMinutes()} : ${today.getSeconds()}`);
       response.send(eBrite);
     })
     .catch(error => handleError(error));
